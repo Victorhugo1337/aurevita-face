@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    @apply bg-bone-50 text-ink font-sans;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display;
+    letter-spacing: -0.015em;
+    font-weight: 400;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full
+           text-sm font-medium transition-all duration-200 disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-moss-900 text-bone-50 hover:bg-moss-800;
+  }
+  .btn-outline {
+    @apply btn border border-moss-900 text-moss-900 hover:bg-moss-900 hover:text-bone-50;
+  }
+  .btn-ghost {
+    @apply btn text-moss-900 hover:bg-moss-100;
+  }
+  .input {
+    @apply w-full px-4 py-3 rounded-xl border border-moss-200 bg-bone-50
+           text-ink placeholder:text-moss-400
+           focus:outline-none focus:border-moss-700 focus:ring-1 focus:ring-moss-700
+           transition;
+  }
+  .card {
+    @apply bg-bone-50 border border-bone-200 rounded-xl2;
+  }
+  .badge {
+    @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium;
+  }
+}
+
+/* Custom scrollbar discreta */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #c6d6bd; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #a0bb93; }
