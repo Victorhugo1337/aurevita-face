@@ -1,4 +1,4 @@
-# Presence Front — protótipo
+# Aurevita front-end — protótipo
 
 Front-end da loja **Presence Nutrition for Life**.
 Projeto de curricularização. Stack: **React + Vite + Tailwind CSS + React Router**.
