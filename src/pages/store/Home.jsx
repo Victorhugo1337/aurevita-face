@@ -30,7 +30,7 @@ export function Home() {
 
   if (!isAuthenticated) {
     return (
-      <>
+      <div className="flex flex-col flex-1">
         <section className="relative overflow-hidden bg-bone-100">
           <div className="max-w-7xl mx-auto px-6 py-20 md:py-32 grid md:grid-cols-12 gap-8 items-center">
             <div className="md:col-span-7">
@@ -63,8 +63,8 @@ export function Home() {
           </div>
         </section>
 
-        <section className="bg-moss-950 text-bone-100">
-          <div className="max-w-7xl mx-auto px-6 py-20 grid md:grid-cols-3 gap-12">
+        <section className="flex-1 bg-moss-950 text-bone-100">
+          <div className="max-w-7xl mx-auto px-6 py-20 md:py-24 grid md:grid-cols-3 gap-12">
             {[
               { icon: Leaf,        title: 'Rede integrada',       text: 'Representantes, distribuidores e filiais conectados.' },
               { icon: Sparkles,    title: 'Pedidos em tempo real', text: 'Acompanhe status, aprovações e entregas na hora.' },
@@ -78,7 +78,7 @@ export function Home() {
             ))}
           </div>
         </section>
-      </>
+      </div>
     )
   }
 

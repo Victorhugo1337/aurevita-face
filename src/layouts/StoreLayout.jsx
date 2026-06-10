@@ -16,26 +16,32 @@ export function StoreLayout() {
             <span className="text-xs text-moss-500 font-mono hidden sm:inline">/ gestão comercial</span>
           </Link>
 
-          {isAuthenticated ? (
-            <Link
-              to={getHomeRoute(user.role)}
-              className="text-sm text-moss-700 hover:text-moss-900 transition"
-            >
-              Ir para o painel
-            </Link>
-          ) : (
-            <Link to="/login" className="text-sm text-moss-700 hover:text-moss-900 transition">
-              Entrar
-            </Link>
-          )}
+          <div className="flex items-center gap-4 sm:gap-6">
+            <ApiDocsLink
+              label="Docs API"
+              className="text-sm text-moss-600 hover:text-moss-900 inline-flex items-center gap-1.5 transition"
+            />
+            {isAuthenticated ? (
+              <Link
+                to={getHomeRoute(user.role)}
+                className="text-sm font-medium text-moss-900 hover:text-moss-700 transition"
+              >
+                Ir para o painel
+              </Link>
+            ) : (
+              <Link to="/login" className="btn-primary text-sm py-2.5 px-5">
+                Entrar
+              </Link>
+            )}
+          </div>
         </div>
       </header>
 
-      <main className="flex-1">
+      <main className="flex-1 flex flex-col">
         <Outlet />
       </main>
 
-      <footer className="bg-moss-950 text-bone-100 mt-24">
+      <footer className="bg-moss-950 text-bone-100">
         <div className="max-w-7xl mx-auto px-6 py-16 grid md:grid-cols-4 gap-10">
           <div className="md:col-span-2">
             <div className="font-display text-3xl text-bone-50 mb-3">Aurevita</div>
@@ -55,10 +61,6 @@ export function StoreLayout() {
         <div className="border-t border-moss-800">
           <div className="max-w-7xl mx-auto px-6 py-5 text-xs text-bone-200 flex justify-between flex-wrap gap-2 items-center">
             <span>© 2026 Aurevita. Todos os direitos reservados.</span>
-            <ApiDocsLink
-              label="Swagger / API"
-              className="font-mono text-bone-200 hover:text-bone-50 inline-flex items-center gap-1.5 transition"
-            />
             {isAuthenticated && isAdmin && (
               <Link to="/admin" className="font-mono text-bone-200 hover:text-bone-50">painel admin →</Link>
             )}
