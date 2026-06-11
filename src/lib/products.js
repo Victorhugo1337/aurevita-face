@@ -1,5 +1,30 @@
-import { request } from './api'
+import { request, uploadFile } from './api'
 import { resolveProductPricing } from './pricing'
+
+export const PRODUCT_PRICE_TYPES = [
+  { value: 'REPRESENTANT', label: 'Representante' },
+  { value: 'DISTRIBUTOR', label: 'Distribuidor' },
+  { value: 'DIRECTOR', label: 'Diretor' },
+  { value: 'SENIOR', label: 'Diretor sênior' },
+]
+
+export function buildProductBody(form) {
+  const body = {
+    name: form.name?.trim(),
+    description: form.description?.trim() || undefined,
+    sku: form.sku?.trim() || undefined,
+    brand: form.brand?.trim() || undefined,
+    category: form.category || undefined,
+    unit: form.unit?.trim() || undefined,
+  }
+  return Object.fromEntries(Object.entries(body).filter(([, v]) => v != null && v !== ''))
+}
+
+export function resolveCategorySlug(category, categories = []) {
+  if (!category) return ''
+  if (categories.some((c) => c.slug === category)) return category
+  return categories.find((c) => c.name === category)?.slug || category
+}
 
 export function mapProduct(p, user) {
   const pricing = resolveProductPricing(p, user)
@@ -64,17 +89,50 @@ export async function fetchCategories() {
 }
 
 export async function createProduct(body) {
-  const p = await request('/products', { method: 'POST', body })
+  const p = await request('/products', { method: 'POST', body: buildProductBody(body) })
   return mapProduct(p)
 }
 
 export async function updateProduct(id, body) {
-  const p = await request(`/products/${id}`, { method: 'PUT', body })
+  const p = await request(`/products/${id}`, { method: 'PUT', body: buildProductBody(body) })
   return mapProduct(p)
 }
 
 export async function deleteProduct(id) {
   return request(`/products/${id}`, { method: 'DELETE' })
+}
+
+export async function addProductPrice(productId, { price, type }) {
+  return request(`/products/${productId}/prices`, {
+    method: 'POST',
+    body: { price: Number(price), type: type || undefined },
+  })
+}
+
+export async function deleteProductPrice(priceId) {
+  return request(`/products/prices/${priceId}`, { method: 'DELETE' })
+}
+
+export async function uploadProductImage(productId, file) {
+  return uploadFile(`/products/${productId}/images`, file)
+}
+
+export async function deleteProductImage(imageId) {
+  return request(`/products/images/${imageId}`, { method: 'DELETE' })
+}
+
+/** Cria ou atualiza produto e, se informado, adiciona preço e imagem (endpoints separados da API). */
+export async function saveProduct({ id, form, price, priceType, imageFile }) {
+  const product = id ? await updateProduct(id, form) : await createProduct(form)
+
+  if (price != null && Number(price) > 0) {
+    await addProductPrice(product.id, { price, type: priceType })
+  }
+  if (imageFile) {
+    await uploadProductImage(product.id, imageFile)
+  }
+
+  return product
 }
 
 /** @deprecated use fetchCategories */
