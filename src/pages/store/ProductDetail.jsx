@@ -71,6 +71,9 @@ export function ProductDetail({ catalogPath = '/loja' }) {
           <p className="text-lg text-moss-700 mb-8 leading-relaxed">{product.short}</p>
 
           <div className="font-display text-4xl text-ink mb-2">{formatBRL(product.price)}</div>
+          {product.priceLevelLabel && (
+            <p className="text-xs text-moss-600 mb-2">{product.priceLevelLabel}</p>
+          )}
           <div className="text-xs text-moss-600 mb-8">
             ou 3x de {formatBRL(product.price / 3)} sem juros
           </div>

@@ -1,18 +1,23 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, ShoppingCart, Package, LogOut } from 'lucide-react'
+import {
+  LayoutDashboard, ShoppingCart, Package, LogOut, ArrowLeftRight, Settings,
+} from 'lucide-react'
 import { useStore } from '../lib/store'
 import { getRoleLabel } from '../lib/roles'
-import { ApiDocsLink } from '../components/ApiDocsLink'
+import { getAppNavItems } from '../lib/permissions'
 
-const navItems = [
-  { to: '/app',            icon: LayoutDashboard, label: 'Minha operação', end: true },
-  { to: '/app/pedidos',    icon: ShoppingCart,    label: 'Meus pedidos' },
-  { to: '/app/catalogo',   icon: Package,         label: 'Catálogo' },
-]
+const ICONS = {
+  dashboard: LayoutDashboard,
+  orders: ShoppingCart,
+  catalog: Package,
+  movements: ArrowLeftRight,
+  config: Settings,
+}
 
 export function AppLayout() {
   const { user, logout } = useStore()
   const nav = useNavigate()
+  const navItems = getAppNavItems(user?.role)
 
   return (
     <div className="min-h-screen flex bg-bone-100">
@@ -25,25 +30,24 @@ export function AppLayout() {
         </div>
 
         <nav className="flex-1 p-3 space-y-1">
-          {navItems.map(({ to, icon: Icon, label, end }) => (
-            <NavLink
-              key={to} to={to} end={end}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition ${
-                  isActive
-                    ? 'bg-moss-800 text-bone-50'
-                    : 'text-bone-200 hover:bg-moss-900 hover:text-bone-50'
-                }`
-              }
-            >
-              <Icon size={18} />
-              {label}
-            </NavLink>
-          ))}
-          <ApiDocsLink
-            label="Docs API"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-bone-200 hover:bg-moss-900 hover:text-bone-50 transition mt-2"
-          />
+          {navItems.map(({ to, icon, label, end }) => {
+            const Icon = ICONS[icon] || Package
+            return (
+              <NavLink
+                key={to} to={to} end={end}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition ${
+                    isActive
+                      ? 'bg-moss-800 text-bone-50'
+                      : 'text-bone-200 hover:bg-moss-900 hover:text-bone-50'
+                  }`
+                }
+              >
+                <Icon size={18} />
+                {label}
+              </NavLink>
+            )
+          })}
         </nav>
 
         <div className="p-4 border-t border-moss-800">
@@ -57,6 +61,7 @@ export function AppLayout() {
             </div>
           </div>
           <button
+            type="button"
             onClick={() => { logout(); nav('/login') }}
             className="w-full flex items-center justify-center gap-2 px-3 py-2 text-xs text-bone-200 border border-moss-800 rounded-lg hover:bg-moss-900"
           >

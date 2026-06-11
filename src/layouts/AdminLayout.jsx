@@ -1,14 +1,15 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, Package, ShoppingCart, Users, Settings, LogOut } from 'lucide-react'
+import { LayoutDashboard, Package, ShoppingCart, Users, Settings, LogOut, ArrowLeftRight } from 'lucide-react'
 import { useStore } from '../lib/store'
 import { ApiDocsLink } from '../components/ApiDocsLink'
 
 const navItems = [
-  { to: '/admin',           icon: LayoutDashboard, label: 'Dashboard', end: true },
-  { to: '/admin/produtos',  icon: Package,         label: 'Produtos' },
-  { to: '/admin/pedidos',   icon: ShoppingCart,    label: 'Pedidos' },
-  { to: '/admin/clientes',  icon: Users,           label: 'Clientes' },
-  { to: '/admin/config',    icon: Settings,        label: 'Configurações' },
+  { to: '/admin',              icon: LayoutDashboard, label: 'Dashboard', end: true },
+  { to: '/admin/movimentacoes', icon: ArrowLeftRight, label: 'Movimentações' },
+  { to: '/admin/produtos',     icon: Package,         label: 'Produtos' },
+  { to: '/admin/pedidos',      icon: ShoppingCart,    label: 'Pedidos' },
+  { to: '/admin/clientes',     icon: Users,           label: 'Clientes' },
+  { to: '/admin/config',       icon: Settings,        label: 'Configurações' },
 ]
 
 export function AdminLayout() {
