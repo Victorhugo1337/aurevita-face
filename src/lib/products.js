@@ -1,46 +1,8 @@
 import { request } from './api'
-import { ROLES } from './roles'
+import { resolveProductPricing } from './pricing'
 
-const PRICE_TYPE_BY_ROLE = {
-  [ROLES.REPRESENTANT]: 'REPRESENTANT',
-  [ROLES.DISTRIBUTOR]: 'DISTRIBUTOR',
-  [ROLES.DIRECTOR]: 'DIRECTOR',
-  [ROLES.SENIOR]: 'SENIOR',
-  [ROLES.ADMIN]: 'REPRESENTANT',
-}
-
-function resolvePriceId(p, priceLevel) {
-  const tier = p.prices?.find((pr) => pr.type?.toUpperCase() === priceLevel?.toUpperCase())
-  if (tier) return tier.id
-  return p.prices?.[0]?.id ?? null
-}
-
-function pickPriceForRole(p, role) {
-  const type = PRICE_TYPE_BY_ROLE[role] || 'REPRESENTANT'
-  const tier = p.prices?.find((pr) => pr.type?.toUpperCase() === type)
-  if (tier) return { price: Number(tier.price), priceLevel: type, priceId: tier.id }
-
-  const fallback = p.prices?.[0]
-  if (fallback) {
-    return { price: Number(fallback.price), priceLevel: fallback.type, priceId: fallback.id }
-  }
-
-  return { price: Number(p.price ?? 0), priceLevel: type, priceId: null }
-}
-
-export function mapProduct(p, role) {
-  const fromApi = p.price != null && p.priceLevel
-  const resolved = fromApi
-    ? {
-        price: Number(p.price),
-        priceLevel: p.priceLevel,
-        priceLevelLabel: p.priceLevelLabel,
-        priceId: resolvePriceId(p, p.priceLevel),
-      }
-    : (() => {
-        const fallback = pickPriceForRole(p, role)
-        return { ...fallback, priceLevelLabel: null }
-      })()
+export function mapProduct(p, user) {
+  const pricing = resolveProductPricing(p, user)
 
   return {
     id: p.id,
@@ -48,10 +10,12 @@ export function mapProduct(p, role) {
     name: p.name,
     category: p.category || '',
     categoryLabel: p.category || 'Outros',
-    price: resolved.price,
-    priceId: resolved.priceId,
-    priceTier: resolved.priceLevel,
-    priceLevelLabel: resolved.priceLevelLabel,
+    price: pricing.price,
+    priceId: pricing.priceId,
+    priceSource: pricing.priceSource,
+    standardPrice: pricing.standardPrice,
+    priceTier: pricing.priceLevel,
+    priceLevelLabel: pricing.priceLevelLabel,
     short: p.description || '',
     description: p.description || '',
     brand: p.brand || '',
@@ -72,26 +36,26 @@ function buildQuery({ page = 0, size = 20, category, search, active } = {}) {
 }
 
 export async function fetchProductsPage(filters = {}) {
-  const { role, ...rest } = filters
+  const { user, ...rest } = filters
   return request(`/products?${buildQuery(rest)}`)
 }
 
 export async function fetchProducts(filters = {}) {
-  const { role, ...rest } = filters
+  const { user, ...rest } = filters
   const first = await fetchProductsPage(rest)
-  let all = first.content.map((p) => mapProduct(p, role))
+  let all = first.content.map((p) => mapProduct(p, user))
 
   for (let p = 1; p < first.totalPages; p++) {
     const next = await fetchProductsPage({ ...rest, page: p, size: 100 })
-    all = all.concat(next.content.map((item) => mapProduct(item, role)))
+    all = all.concat(next.content.map((item) => mapProduct(item, user)))
   }
 
   return all
 }
 
-export async function fetchProductById(id, role) {
+export async function fetchProductById(id, user) {
   const p = await request(`/products/${id}`)
-  return mapProduct(p, role)
+  return mapProduct(p, user)
 }
 
 export async function fetchCategories() {

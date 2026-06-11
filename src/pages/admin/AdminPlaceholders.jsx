@@ -39,14 +39,14 @@ export function AdminCustomers() {
   ] : []
 
   return (
-    <div className="p-10">
-      <div className="flex justify-between items-end mb-10">
+    <div className="page">
+      <div className="page-header">
         <div>
           <p className="text-xs uppercase tracking-[0.3em] text-moss-600 mb-2">Base</p>
-          <h1 className="font-display text-4xl text-moss-950">Clientes</h1>
+          <h1 className="page-title">Clientes</h1>
           <p className="text-moss-600 text-sm mt-2">Parceiros B2B da rede Aurevita.</p>
         </div>
-        <button type="button" onClick={() => setShowForm(true)} className="btn-primary">
+        <button type="button" onClick={() => setShowForm(true)} className="btn-primary w-full sm:w-auto shrink-0">
           <Plus size={16} /> Novo cliente
         </button>
       </div>
@@ -73,6 +73,7 @@ export function AdminCustomers() {
           <div className="px-5 py-4 border-b border-bone-200 bg-bone-100">
             <h2 className="font-display text-lg text-moss-950">Parceiros cadastrados</h2>
           </div>
+          <div className="table-wrap">
           <table className="w-full text-sm">
             <thead>
               <tr className="text-left text-xs uppercase tracking-widest text-moss-600 border-b border-bone-200">
@@ -100,6 +101,7 @@ export function AdminCustomers() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
 
@@ -141,10 +143,10 @@ function PlatformSettings({ title, subtitle, adminMode, showTeam, seniorMode }) 
   }, [])
 
   return (
-    <div className="p-10">
-      <div className="mb-10">
+    <div className="page">
+      <div className="mb-8 lg:mb-10">
         <p className="text-xs uppercase tracking-[0.3em] text-moss-600 mb-2">Sistema</p>
-        <h1 className="font-display text-4xl text-moss-950">{title}</h1>
+        <h1 className="page-title">{title}</h1>
         {subtitle && <p className="text-moss-600 text-sm mt-2">{subtitle}</p>}
       </div>
 
@@ -197,6 +199,7 @@ function PlatformSettings({ title, subtitle, adminMode, showTeam, seniorMode }) 
                 <p className="text-xs text-moss-600 mt-1">CRUD completo via API — POST /branches (admin)</p>
               )}
             </div>
+            <div className="table-wrap">
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-xs uppercase tracking-widest text-moss-600 border-b border-bone-200">
@@ -217,6 +220,7 @@ function PlatformSettings({ title, subtitle, adminMode, showTeam, seniorMode }) 
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         </>
       )}

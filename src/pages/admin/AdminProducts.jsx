@@ -59,13 +59,13 @@ export function AdminProducts() {
   }
 
   return (
-    <div className="p-10">
-      <div className="flex justify-between items-end mb-10">
+    <div className="page">
+      <div className="page-header">
         <div>
           <p className="text-xs uppercase tracking-[0.3em] text-moss-600 mb-2">Catálogo</p>
-          <h1 className="font-display text-4xl text-moss-950">Produtos</h1>
+          <h1 className="page-title">Produtos</h1>
         </div>
-        <button type="button" onClick={() => setModal({})} className="btn-primary">
+        <button type="button" onClick={() => setModal({})} className="btn-primary w-full sm:w-auto shrink-0">
           <Plus size={16} /> Novo produto
         </button>
       </div>
@@ -73,8 +73,8 @@ export function AdminProducts() {
       {loading && <p className="text-moss-600 text-sm mb-6">Carregando produtos…</p>}
       {error && <p className="text-clay-600 text-sm mb-6">{error}</p>}
 
-      <div className="flex gap-3 mb-6">
-        <div className="relative flex-1 max-w-md">
+      <div className="flex flex-col sm:flex-row gap-3 mb-6">
+        <div className="relative flex-1 sm:max-w-md">
           <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-moss-400" />
           <input
             value={q} onChange={(e) => setQ(e.target.value)}
@@ -82,13 +82,14 @@ export function AdminProducts() {
             className="input pl-11"
           />
         </div>
-        <select value={cat} onChange={(e) => setCat(e.target.value)} className="input max-w-xs">
+        <select value={cat} onChange={(e) => setCat(e.target.value)} className="input sm:max-w-xs">
           <option value="">Todas categorias</option>
           {categories.map((c) => <option key={c.slug} value={c.slug}>{c.name}</option>)}
         </select>
       </div>
 
       <div className="card overflow-hidden">
+        <div className="table-wrap">
         <table className="w-full">
           <thead className="bg-bone-100 border-b border-bone-200">
             <tr className="text-left text-xs uppercase tracking-widest text-moss-600">
@@ -139,6 +140,7 @@ export function AdminProducts() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
 
       <div className="text-xs text-moss-500 mt-4 font-mono">{products.length} produtos</div>

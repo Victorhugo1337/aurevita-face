@@ -25,10 +25,10 @@ export function MovementsPage({ title = 'Movimentações', subtitle }) {
   }, [])
 
   return (
-    <div className="p-10">
-      <div className="mb-10">
+    <div className="page">
+      <div className="mb-8 lg:mb-10">
         <p className="text-xs uppercase tracking-[0.3em] text-moss-600 mb-2">Operação</p>
-        <h1 className="font-display text-4xl text-moss-950">{title}</h1>
+        <h1 className="page-title">{title}</h1>
         <p className="text-moss-600 text-sm mt-2">
           {subtitle || MOVEMENTS_SUBTITLE[user?.role] || 'Histórico no seu escopo.'}
         </p>
@@ -38,6 +38,7 @@ export function MovementsPage({ title = 'Movimentações', subtitle }) {
       {error && <p className="text-clay-600 text-sm">{error}</p>}
 
       <div className="card overflow-hidden">
+        <div className="table-wrap">
         <table className="w-full text-sm">
           <thead className="bg-bone-100 border-b border-bone-200">
             <tr className="text-left text-xs uppercase tracking-widest text-moss-600">
@@ -69,6 +70,7 @@ export function MovementsPage({ title = 'Movimentações', subtitle }) {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   )

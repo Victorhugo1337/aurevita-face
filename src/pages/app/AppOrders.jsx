@@ -29,10 +29,10 @@ export function AppOrders() {
   useEffect(() => { load() }, [])
 
   return (
-    <div className="p-10">
-      <div className="mb-10">
+    <div className="page">
+      <div className="mb-8 lg:mb-10">
         <p className="text-xs uppercase tracking-[0.3em] text-moss-600 mb-2">Sua operação</p>
-        <h1 className="font-display text-4xl text-moss-950">Meus pedidos</h1>
+        <h1 className="page-title">Meus pedidos</h1>
       </div>
 
       {loading && <p className="text-moss-600 text-sm mb-6">Carregando pedidos…</p>}
@@ -53,6 +53,7 @@ export function AppOrders() {
       </div>
 
       <div className="card overflow-hidden">
+        <div className="table-wrap">
         <table className="w-full text-sm">
           <thead className="bg-bone-100 border-b border-bone-200">
             <tr className="text-left text-xs uppercase tracking-widest text-moss-600">
@@ -85,6 +86,7 @@ export function AppOrders() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
 
       {selectedId && (

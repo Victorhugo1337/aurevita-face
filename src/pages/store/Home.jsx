@@ -32,7 +32,7 @@ export function Home() {
     return (
       <div className="flex flex-col flex-1">
         <section className="relative overflow-hidden bg-bone-100">
-          <div className="max-w-7xl mx-auto px-6 py-20 md:py-32 grid md:grid-cols-12 gap-8 items-center">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-20 md:py-32 grid md:grid-cols-12 gap-8 items-center">
             <div className="md:col-span-7">
               <p className="text-xs uppercase tracking-[0.3em] text-moss-600 mb-6">
                 — Plataforma B2B
@@ -64,7 +64,7 @@ export function Home() {
         </section>
 
         <section className="flex-1 bg-moss-950 text-bone-100">
-          <div className="max-w-7xl mx-auto px-6 py-20 md:py-24 grid md:grid-cols-3 gap-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-20 md:py-24 grid md:grid-cols-3 gap-12">
             {[
               { icon: Leaf,        title: 'Rede integrada',       text: 'Representantes, distribuidores e filiais conectados.' },
               { icon: Sparkles,    title: 'Pedidos em tempo real', text: 'Acompanhe status, aprovações e entregas na hora.' },
@@ -85,7 +85,7 @@ export function Home() {
   return (
     <>
       <section className="relative overflow-hidden bg-bone-100">
-        <div className="max-w-7xl mx-auto px-6 py-20 md:py-32 grid md:grid-cols-12 gap-8 items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-20 md:py-32 grid md:grid-cols-12 gap-8 items-center">
           <div className="md:col-span-7">
             <p className="text-xs uppercase tracking-[0.3em] text-moss-600 mb-6">
               — Nutrition for life
@@ -109,7 +109,7 @@ export function Home() {
             <div className="absolute bottom-0 left-0 w-56 h-72 bg-clay-500 rounded-xl2 -rotate-6" />
             <div className="absolute top-16 left-20 w-52 h-64 bg-bone-50 border border-moss-200 rounded-xl2 shadow-xl p-6 flex flex-col justify-end">
               <div className="text-xs font-mono text-moss-600 mb-2">CATÁLOGO / 2026</div>
-              <div className="font-display text-2xl text-moss-950 leading-tight">Linha Presence</div>
+              <div className="font-display text-2xl text-moss-950 leading-tight">Linha Aurevita</div>
               <div className="text-sm text-moss-600 mt-1">Suplementos e nutrição</div>
             </div>
           </div>
@@ -117,7 +117,7 @@ export function Home() {
       </section>
 
       {categories.length > 0 && (
-        <section className="max-w-7xl mx-auto px-6 py-20">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 py-20">
           <div className="flex justify-between items-end mb-10">
             <div>
               <p className="text-xs uppercase tracking-[0.3em] text-moss-600 mb-2">Linhas</p>
@@ -146,7 +146,7 @@ export function Home() {
       )}
 
       <section className="bg-moss-950 text-bone-100">
-        <div className="max-w-7xl mx-auto px-6 py-20 grid md:grid-cols-3 gap-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-20 grid md:grid-cols-3 gap-12">
           {[
             { icon: Leaf,        title: 'Ingredientes selecionados', text: 'Fórmulas curtas, sem aditivos desnecessários.' },
             { icon: Sparkles,    title: 'Fórmulas inovadoras',       text: 'Desenvolvidas com base em ciência e tradição.' },
@@ -161,7 +161,7 @@ export function Home() {
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-6 py-20">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-20">
         <div className="flex justify-between items-end mb-10">
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-moss-600 mb-2">Destaques</p>

@@ -51,7 +51,7 @@ export function Login() {
       <div className="flex items-center justify-center p-8 md:p-16">
         <div className="w-full max-w-sm">
           <div className="md:hidden mb-8">
-            <Link to="/" className="font-display text-2xl text-moss-900">Presence</Link>
+            <Link to="/" className="font-display text-2xl text-moss-900">Aurevita</Link>
           </div>
 
           <h1 className="font-display text-4xl text-moss-950 mb-2">Entrar</h1>

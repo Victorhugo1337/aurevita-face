@@ -31,19 +31,19 @@ export function AdminOrders() {
   const customerName = (o) => o.representantName || o.distributorName || o.branchName || '—'
 
   return (
-    <div className="p-10">
-      <div className="flex justify-between items-end mb-10">
+    <div className="page">
+      <div className="page-header">
         <div>
           <p className="text-xs uppercase tracking-[0.3em] text-moss-600 mb-2">Vendas</p>
-          <h1 className="font-display text-4xl text-moss-950">Pedidos</h1>
+          <h1 className="page-title">Pedidos</h1>
         </div>
-        <button type="button" className="btn-outline"><Download size={14} /> Exportar CSV</button>
+        <button type="button" className="btn-outline w-full sm:w-auto shrink-0"><Download size={14} /> Exportar CSV</button>
       </div>
 
       {loading && <p className="text-moss-600 text-sm mb-6">Carregando pedidos…</p>}
       {error && <p className="text-clay-600 text-sm mb-6">{error}</p>}
 
-      <div className="grid grid-cols-4 gap-3 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
         {[
           { label: 'Total', v: orders.length },
           { label: 'Pendentes', v: orders.filter((o) => orderStatusLabel(o) === 'pendente').length },
@@ -58,6 +58,7 @@ export function AdminOrders() {
       </div>
 
       <div className="card overflow-hidden">
+        <div className="table-wrap">
         <table className="w-full text-sm">
           <thead className="bg-bone-100 border-b border-bone-200">
             <tr className="text-left text-xs uppercase tracking-widest text-moss-600">
@@ -92,6 +93,7 @@ export function AdminOrders() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
 
       {selectedId && (

@@ -5,7 +5,7 @@ import { fetchProducts, fetchCategories } from '../../lib/products'
 import { useStore } from '../../lib/store'
 
 export function Catalog({ productBasePath = '/produto' }) {
-  const { isAuthenticated } = useStore()
+  const { isAuthenticated, user } = useStore()
   const [params, setParams] = useSearchParams()
   const activeCat = params.get('cat')
   const [sort, setSort] = useState('relevance')
@@ -21,7 +21,7 @@ export function Catalog({ productBasePath = '/produto' }) {
     setLoading(true)
     setError('')
     Promise.all([
-      fetchProducts({ category: activeCat || undefined, active: true }),
+      fetchProducts({ category: activeCat || undefined, active: true, user }),
       fetchCategories(),
     ])
       .then(([list, cats]) => {
@@ -31,7 +31,7 @@ export function Catalog({ productBasePath = '/produto' }) {
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false))
-  }, [isAuthenticated, activeCat])
+  }, [isAuthenticated, activeCat, user?.userId])
 
   let list = products.filter((p) => p.active)
   if (sort === 'price-asc')  list = [...list].sort((a, b) => a.price - b.price)
@@ -55,10 +55,10 @@ export function Catalog({ productBasePath = '/produto' }) {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-16">
-      <header className="mb-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-16">
+      <header className="mb-8 sm:mb-12">
         <p className="text-xs uppercase tracking-[0.3em] text-moss-600 mb-3">Catálogo</p>
-        <h1 className="font-display text-5xl md:text-6xl text-moss-950">Todos os produtos</h1>
+        <h1 className="font-display text-3xl sm:text-5xl md:text-6xl text-moss-950">Todos os produtos</h1>
         {priceLabel && (
           <p className="text-sm text-moss-600 mt-2">{priceLabel}</p>
         )}
@@ -68,9 +68,9 @@ export function Catalog({ productBasePath = '/produto' }) {
       {error && <p className="text-clay-600 text-sm mb-6">{error}</p>}
 
       <div className="flex flex-col md:flex-row gap-10">
-        <aside className="md:w-56 flex-shrink-0">
-          <div className="text-xs uppercase tracking-widest text-moss-600 mb-4">Categorias</div>
-          <ul className="space-y-2">
+        <aside className="md:w-56 flex-shrink-0 flex md:block gap-2 overflow-x-auto pb-2 md:pb-0 md:overflow-visible">
+          <div className="text-xs uppercase tracking-widest text-moss-600 mb-0 md:mb-4 hidden md:block">Categorias</div>
+          <ul className="flex md:block gap-4 md:gap-0 md:space-y-2 whitespace-nowrap md:whitespace-normal">
             <li>
               <button
                 type="button"
