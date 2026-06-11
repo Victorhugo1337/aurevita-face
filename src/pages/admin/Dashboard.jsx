@@ -28,11 +28,11 @@ export function Dashboard() {
   const movements = data?.recentMovements || []
 
   return (
-    <div className="p-10">
-      <div className="flex justify-between items-end mb-10">
+    <div className="page">
+      <div className="page-header">
         <div>
           <p className="text-xs uppercase tracking-[0.3em] text-moss-600 mb-2">Visão geral</p>
-          <h1 className="font-display text-4xl text-moss-950">Dashboard Aurevita</h1>
+          <h1 className="page-title">Dashboard Aurevita</h1>
         </div>
       </div>
 

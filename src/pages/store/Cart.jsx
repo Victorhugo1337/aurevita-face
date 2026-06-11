@@ -40,10 +40,10 @@ export function Cart({ catalogPath = '/loja' }) {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-16">
-      <h1 className="font-display text-5xl text-moss-950 mb-12">Carrinho</h1>
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-16">
+      <h1 className="font-display text-3xl sm:text-5xl text-moss-950 mb-8 sm:mb-12">Carrinho</h1>
 
-      <div className="grid lg:grid-cols-3 gap-12">
+      <div className="grid lg:grid-cols-3 gap-8 lg:gap-12">
         <div className="lg:col-span-2 divide-y divide-bone-200">
           {cart.map(({ product, qty }) => (
             <div key={product.id} className="flex gap-5 py-6">
@@ -53,6 +53,11 @@ export function Cart({ catalogPath = '/loja' }) {
                   <div>
                     <h3 className="font-display text-xl text-moss-950">{product.name}</h3>
                     <p className="text-xs text-moss-500 font-mono mt-1">{product.sku}</p>
+                    {product.priceSource === 'negotiated' && (
+                      <span className="inline-block mt-1 text-[10px] uppercase tracking-widest text-clay-600">
+                        preço negociado
+                      </span>
+                    )}
                   </div>
                   <button type="button" onClick={() => remove(product.id)} className="text-moss-400 hover:text-moss-900">
                     <X size={18} />
@@ -71,7 +76,7 @@ export function Cart({ catalogPath = '/loja' }) {
           ))}
         </div>
 
-        <aside className="card p-6 h-fit sticky top-28">
+        <aside className="card p-6 h-fit lg:sticky lg:top-28">
           <h2 className="font-display text-2xl text-moss-950 mb-6">Resumo</h2>
           <dl className="space-y-3 text-sm">
             <div className="flex justify-between"><dt>Subtotal</dt><dd>{formatBRL(total)}</dd></div>

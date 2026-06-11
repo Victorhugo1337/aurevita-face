@@ -29,7 +29,7 @@ export function TeamManagementPanel({ seniorMode = false }) {
 
   return (
     <div className="card overflow-hidden">
-      <div className="px-5 py-4 border-b border-bone-200 bg-bone-100 flex justify-between items-center gap-4">
+      <div className="px-5 py-4 border-b border-bone-200 bg-bone-100 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
           <h2 className="font-display text-lg text-moss-950 flex items-center gap-2">
             <Users size={18} className="text-moss-600" />
@@ -41,7 +41,7 @@ export function TeamManagementPanel({ seniorMode = false }) {
               : 'Todos os usuários cadastrados na plataforma.'}
           </p>
         </div>
-        <button type="button" onClick={() => setShowForm(true)} className="btn-primary shrink-0">
+        <button type="button" onClick={() => setShowForm(true)} className="btn-primary shrink-0 w-full sm:w-auto justify-center">
           <Plus size={16} />
           {seniorMode ? 'Convidar parceiro' : 'Novo cliente'}
         </button>
@@ -59,6 +59,7 @@ export function TeamManagementPanel({ seniorMode = false }) {
       )}
 
       {!loading && !error && (
+        <div className="table-wrap">
         <table className="w-full text-sm">
           <thead>
             <tr className="text-left text-xs uppercase tracking-widest text-moss-600 border-b border-bone-200">
@@ -86,6 +87,7 @@ export function TeamManagementPanel({ seniorMode = false }) {
             ))}
           </tbody>
         </table>
+        </div>
       )}
 
       {seniorMode && !loading && (

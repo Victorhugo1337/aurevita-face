@@ -43,6 +43,21 @@
   .badge {
     @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium;
   }
+  .page {
+    @apply p-4 sm:p-6 lg:p-10;
+  }
+  .page-header {
+    @apply flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-end mb-8 lg:mb-10;
+  }
+  .page-title {
+    @apply font-display text-3xl sm:text-4xl text-moss-950;
+  }
+  .table-wrap {
+    @apply overflow-x-auto -mx-4 sm:mx-0;
+  }
+  .table-wrap table {
+    @apply min-w-[640px] sm:min-w-0;
+  }
 }
 
 /* Custom scrollbar discreta */

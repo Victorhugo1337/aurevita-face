@@ -67,4 +67,38 @@ npm run preview
 
 ## Deploy (Vercel)
 
-Front na Vercel; API em servidor separado. Configure `VITE_API_URL` apontando para a URL pública da API.
+A API de produção está na Azure:
+
+- API: `https://api-aurevita-hvh2e5dmdwe7aca8.centralus-01.azurewebsites.net`
+- Swagger: [documentação](https://api-aurevita-hvh2e5dmdwe7aca8.centralus-01.azurewebsites.net/swagger-ui/index.html)
+
+### Passo a passo
+
+1. Suba o código no GitHub (branch `main` ou `dev`).
+2. Acesse [vercel.com](https://vercel.com) → **Add New Project** → importe o repositório `aurevita-face`.
+3. Framework: **Vite** (detectado automaticamente).
+4. Em **Environment Variables**, adicione (Production, Preview e Development):
+
+   | Nome | Valor |
+   |------|--------|
+   | `VITE_API_URL` | `https://api-aurevita-hvh2e5dmdwe7aca8.centralus-01.azurewebsites.net` |
+   | `VITE_DOCS_URL` | `https://api-aurevita-hvh2e5dmdwe7aca8.centralus-01.azurewebsites.net/swagger-ui/index.html` |
+
+5. **Deploy**. A Vercel roda `npm run build` e publica a pasta `dist`.
+
+O arquivo `vercel.json` já configura fallback SPA para rotas como `/admin` e `/app`.
+
+### CORS na API (Azure)
+
+O back-end precisa aceitar o domínio da Vercel (ex.: `https://seu-projeto.vercel.app`). No Spring, confira se `SecurityConfig` inclui `https://*.vercel.app` em `allowedOriginPatterns`. Se usar domínio customizado, adicione-o também.
+
+### Teste local apontando para a nuvem
+
+Crie `.env.production.local` (não commitar) ou altere temporariamente `.env.development`:
+
+```env
+VITE_API_URL=https://api-aurevita-hvh2e5dmdwe7aca8.centralus-01.azurewebsites.net
+VITE_DOCS_URL=https://api-aurevita-hvh2e5dmdwe7aca8.centralus-01.azurewebsites.net/swagger-ui/index.html
+```
+
+Depois: `npm run dev` e teste o login.

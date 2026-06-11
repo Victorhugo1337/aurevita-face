@@ -35,10 +35,10 @@ export function AppDashboard() {
   ] : []
 
   return (
-    <div className="p-10">
-      <div className="mb-10">
+    <div className="page">
+      <div className="mb-8 lg:mb-10">
         <p className="text-xs uppercase tracking-[0.3em] text-moss-600 mb-2">Portal do parceiro</p>
-        <h1 className="font-display text-4xl text-moss-950">
+        <h1 className="page-title">
           Olá, {user?.name?.split(' ')[0]}.
         </h1>
         <p className="text-moss-600 text-sm mt-2">

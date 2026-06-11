@@ -99,11 +99,17 @@ export async function createOrder(items) {
     headers: { 'Idempotency-Key': crypto.randomUUID() },
     body: {
       typeApprove: 'AUTO',
-      items: items.map(({ product, qty }) => ({
-        idProduct: product.id,
-        quantity: qty,
-        idPrice: product.priceId,
-      })),
+      items: items.map(({ product, qty }) => {
+        const line = {
+          idProduct: product.id,
+          quantity: qty,
+        }
+        // idPrice só quando há preço negociado (product_prices); senão SP usa tabela padrão
+        if (product.priceId != null) {
+          line.idPrice = product.priceId
+        }
+        return line
+      }),
     },
   })
 }

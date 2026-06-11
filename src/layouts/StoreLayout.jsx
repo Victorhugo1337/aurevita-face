@@ -10,7 +10,7 @@ export function StoreLayout() {
   return (
     <div className="min-h-screen flex flex-col">
       <header className="bg-bone-50 border-b border-bone-200 sticky top-0 z-40 backdrop-blur">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
           <Link to="/" className="flex items-baseline gap-2">
             <span className="font-display text-2xl tracking-tightest text-moss-900">Aurevita</span>
             <span className="text-xs text-moss-500 font-mono hidden sm:inline">/ gestão comercial</span>
@@ -42,7 +42,7 @@ export function StoreLayout() {
       </main>
 
       <footer className="bg-moss-950 text-bone-100">
-        <div className="max-w-7xl mx-auto px-6 py-16 grid md:grid-cols-4 gap-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-16 grid md:grid-cols-4 gap-8 sm:gap-10">
           <div className="md:col-span-2">
             <div className="font-display text-3xl text-bone-50 mb-3">Aurevita</div>
             <p className="text-bone-200 text-sm max-w-sm leading-relaxed">
@@ -59,7 +59,7 @@ export function StoreLayout() {
           </div>
         </div>
         <div className="border-t border-moss-800">
-          <div className="max-w-7xl mx-auto px-6 py-5 text-xs text-bone-200 flex justify-between flex-wrap gap-2 items-center">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 text-xs text-bone-200 flex justify-between flex-wrap gap-2 items-center">
             <span>© 2026 Aurevita. Todos os direitos reservados.</span>
             {isAuthenticated && isAdmin && (
               <Link to="/admin" className="font-mono text-bone-200 hover:text-bone-50">painel admin →</Link>

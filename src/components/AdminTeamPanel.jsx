@@ -22,7 +22,7 @@ export function AdminTeamPanel() {
 
   return (
     <div className="card overflow-hidden">
-      <div className="px-5 py-4 border-b border-bone-200 bg-bone-100 flex justify-between items-center gap-4">
+      <div className="px-5 py-4 border-b border-bone-200 bg-bone-100 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
           <h2 className="font-display text-lg text-moss-950 flex items-center gap-2">
             <Shield size={18} className="text-moss-600" />
@@ -32,7 +32,7 @@ export function AdminTeamPanel() {
             Equipe interna Aurevita com acesso ao painel /admin.
           </p>
         </div>
-        <button type="button" onClick={() => setShowForm(true)} className="btn-primary shrink-0">
+        <button type="button" onClick={() => setShowForm(true)} className="btn-primary shrink-0 w-full sm:w-auto justify-center">
           <Plus size={16} /> Novo admin
         </button>
       </div>
@@ -41,6 +41,7 @@ export function AdminTeamPanel() {
       {error && <p className="p-5 text-sm text-clay-600">{error}</p>}
 
       {!loading && !error && (
+        <div className="table-wrap">
         <table className="w-full text-sm">
           <thead>
             <tr className="text-left text-xs uppercase tracking-widest text-moss-600 border-b border-bone-200">
@@ -64,6 +65,7 @@ export function AdminTeamPanel() {
             ))}
           </tbody>
         </table>
+        </div>
       )}
 
       {showForm && (

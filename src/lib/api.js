@@ -1,4 +1,17 @@
-const BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080'
+function resolveApiBase() {
+  const raw = import.meta.env.VITE_API_URL
+  if (!raw || raw === 'VITE_API_URL' || !/^https?:\/\//.test(raw)) {
+    if (import.meta.env.PROD) {
+      console.error(
+        'VITE_API_URL inválida no build. Configure na Vercel: Settings → Environment Variables → Redeploy.'
+      )
+    }
+    return 'http://localhost:8080'
+  }
+  return raw.replace(/\/$/, '')
+}
+
+const BASE = resolveApiBase()
 
 const TOKEN_KEY = 'presence_token'
 
