@@ -34,6 +34,8 @@ export async function request(path, { method = 'GET', body, headers = {}, auth =
     body: body != null ? JSON.stringify(body) : undefined,
   })
 
+  if (res.status === 204) return null
+
   let json
   try {
     json = await res.json()

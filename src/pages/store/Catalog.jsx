@@ -1,7 +1,7 @@
 import { useSearchParams, Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { ProductCard } from '../../components/ProductCard'
-import { fetchProducts, deriveCategories } from '../../lib/products'
+import { fetchProducts, fetchCategories } from '../../lib/products'
 import { useStore } from '../../lib/store'
 
 export function Catalog({ productBasePath = '/produto' }) {
@@ -11,6 +11,7 @@ export function Catalog({ productBasePath = '/produto' }) {
   const [sort, setSort] = useState('relevance')
   const [products, setProducts] = useState([])
   const [categories, setCategories] = useState([])
+  const [priceLabel, setPriceLabel] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -19,17 +20,20 @@ export function Catalog({ productBasePath = '/produto' }) {
 
     setLoading(true)
     setError('')
-    fetchProducts()
-      .then((list) => {
+    Promise.all([
+      fetchProducts({ category: activeCat || undefined, active: true }),
+      fetchCategories(),
+    ])
+      .then(([list, cats]) => {
         setProducts(list)
-        setCategories(deriveCategories(list))
+        setCategories(cats)
+        setPriceLabel(list[0]?.priceLevelLabel || '')
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false))
-  }, [isAuthenticated])
+  }, [isAuthenticated, activeCat])
 
   let list = products.filter((p) => p.active)
-  if (activeCat) list = list.filter((p) => p.category === activeCat)
   if (sort === 'price-asc')  list = [...list].sort((a, b) => a.price - b.price)
   if (sort === 'price-desc') list = [...list].sort((a, b) => b.price - a.price)
   if (sort === 'name')       list = [...list].sort((a, b) => a.name.localeCompare(b.name))
@@ -55,6 +59,9 @@ export function Catalog({ productBasePath = '/produto' }) {
       <header className="mb-12">
         <p className="text-xs uppercase tracking-[0.3em] text-moss-600 mb-3">Catálogo</p>
         <h1 className="font-display text-5xl md:text-6xl text-moss-950">Todos os produtos</h1>
+        {priceLabel && (
+          <p className="text-sm text-moss-600 mt-2">{priceLabel}</p>
+        )}
       </header>
 
       {loading && <p className="text-moss-600 text-sm mb-6">Carregando produtos…</p>}
@@ -66,6 +73,7 @@ export function Catalog({ productBasePath = '/produto' }) {
           <ul className="space-y-2">
             <li>
               <button
+                type="button"
                 onClick={() => setCat(null)}
                 className={`text-left text-sm transition ${!activeCat ? 'text-moss-900 font-medium' : 'text-moss-600 hover:text-moss-900'}`}
               >
@@ -75,6 +83,7 @@ export function Catalog({ productBasePath = '/produto' }) {
             {categories.map((cat) => (
               <li key={cat.slug}>
                 <button
+                  type="button"
                   onClick={() => setCat(cat.slug)}
                   className={`text-left text-sm transition ${activeCat === cat.slug ? 'text-moss-900 font-medium' : 'text-moss-600 hover:text-moss-900'}`}
                 >

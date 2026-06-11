@@ -1,8 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Plus, Search, Edit2, Trash2 } from 'lucide-react'
-import { fetchProducts, deriveCategories } from '../../lib/products'
+import {
+  fetchProducts,
+  fetchCategories,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+} from '../../lib/products'
 import { formatBRL } from '../../lib/format'
 import { ProductVisual } from '../../components/ProductVisual'
+import { ProductFormModal } from '../../components/ProductFormModal'
 
 export function AdminProducts() {
   const [products, setProducts] = useState([])
@@ -11,23 +18,45 @@ export function AdminProducts() {
   const [error, setError] = useState('')
   const [q, setQ] = useState('')
   const [cat, setCat] = useState('')
+  const [modal, setModal] = useState(null)
 
-  useEffect(() => {
-    fetchProducts()
-      .then((list) => {
+  const load = useCallback(() => {
+    setLoading(true)
+    setError('')
+    Promise.all([
+      fetchProducts({ category: cat || undefined, search: q || undefined }),
+      fetchCategories(),
+    ])
+      .then(([list, cats]) => {
         setProducts(list)
-        setCategories(deriveCategories(list))
+        setCategories(cats)
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false))
-  }, [])
+  }, [cat, q])
 
-  const list = products.filter((p) =>
-    (!cat || p.category === cat) &&
-    (!q || p.name.toLowerCase().includes(q.toLowerCase()) || p.sku.toLowerCase().includes(q.toLowerCase()))
-  )
+  useEffect(() => {
+    const t = setTimeout(load, q ? 300 : 0)
+    return () => clearTimeout(t)
+  }, [load, q])
 
   const catName = (slug) => categories.find((c) => c.slug === slug)?.name || slug
+
+  const handleSave = async (form) => {
+    if (modal?.id) await updateProduct(modal.id, form)
+    else await createProduct(form)
+    load()
+  }
+
+  const handleDelete = async (id) => {
+    if (!confirm('Remover este produto?')) return
+    try {
+      await deleteProduct(id)
+      load()
+    } catch (e) {
+      setError(e.message)
+    }
+  }
 
   return (
     <div className="p-10">
@@ -36,7 +65,9 @@ export function AdminProducts() {
           <p className="text-xs uppercase tracking-[0.3em] text-moss-600 mb-2">Catálogo</p>
           <h1 className="font-display text-4xl text-moss-950">Produtos</h1>
         </div>
-        <button className="btn-primary"><Plus size={16} /> Novo produto</button>
+        <button type="button" onClick={() => setModal({})} className="btn-primary">
+          <Plus size={16} /> Novo produto
+        </button>
       </div>
 
       {loading && <p className="text-moss-600 text-sm mb-6">Carregando produtos…</p>}
@@ -70,7 +101,7 @@ export function AdminProducts() {
             </tr>
           </thead>
           <tbody className="divide-y divide-bone-200 text-sm">
-            {list.map((p) => (
+            {products.map((p) => (
               <tr key={p.id} className="hover:bg-bone-100/50 transition">
                 <td className="py-3 px-5">
                   <div className="flex items-center gap-3">
@@ -88,10 +119,18 @@ export function AdminProducts() {
                 </td>
                 <td className="py-3 px-5">
                   <div className="flex gap-1 justify-end">
-                    <button className="p-2 text-moss-600 hover:text-moss-900 hover:bg-bone-100 rounded">
+                    <button
+                      type="button"
+                      onClick={() => setModal(p)}
+                      className="p-2 text-moss-600 hover:text-moss-900 hover:bg-bone-100 rounded"
+                    >
                       <Edit2 size={14} />
                     </button>
-                    <button className="p-2 text-moss-600 hover:text-clay-600 hover:bg-bone-100 rounded">
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(p.id)}
+                      className="p-2 text-moss-600 hover:text-clay-600 hover:bg-bone-100 rounded"
+                    >
                       <Trash2 size={14} />
                     </button>
                   </div>
@@ -102,9 +141,16 @@ export function AdminProducts() {
         </table>
       </div>
 
-      <div className="text-xs text-moss-500 mt-4 font-mono">
-        {list.length} de {products.length} produtos
-      </div>
+      <div className="text-xs text-moss-500 mt-4 font-mono">{products.length} produtos</div>
+
+      {modal && (
+        <ProductFormModal
+          product={modal.id ? modal : null}
+          categories={categories}
+          onClose={() => setModal(null)}
+          onSave={handleSave}
+        />
+      )}
     </div>
   )
 }

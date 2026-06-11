@@ -1,67 +1,70 @@
 # Aurevita front-end — protótipo
 
-Front-end da loja **Presence Nutrition for Life**.
-Projeto de curricularização. Stack: **React + Vite + Tailwind CSS + React Router**.
+Front-end B2B da plataforma **Aurevita*. Stack: **React + Vite + Tailwind CSS + React Router**.
+
+Integrado com a API Spring Boot (`api-aurevita`).
 
 ## Como rodar
 
 ```bash
 npm install
+cp .env.example .env.development   # ajuste VITE_API_URL se necessário
 npm run dev
 ```
 
-Abre em `http://localhost:5173`.
+Abre em `http://localhost:5173`. A API deve estar em `http://localhost:8080`.
 
-## Estrutura
-
-```
-src/
-├── components/          Componentes reutilizáveis (ProductCard, ProductVisual)
-├── data/mock.js         Dados mock — trocar por chamadas REST quando back-end existir
-├── layouts/             StoreLayout (loja) e AdminLayout (painel)
-├── lib/store.jsx        Context global: carrinho + auth
-├── pages/
-│   ├── store/           Home, Catalog, ProductDetail, Cart
-│   ├── auth/            Login, Register
-│   └── admin/           Dashboard, AdminProducts, AdminOrders, ...
-├── App.jsx              Rotas
-└── index.css            Tailwind + design tokens
+```env
+VITE_API_URL=http://localhost:8080
+VITE_DOCS_URL=http://localhost:8080/swagger-ui/index.html
 ```
 
-## Rotas
+## Painéis por perfil
 
-| Rota                | Descrição                              |
-|---------------------|----------------------------------------|
-| `/`                 | Landing da loja                        |
-| `/loja`             | Catálogo (filtra por `?cat=slug`)      |
-| `/produto/:id`      | Detalhe do produto                     |
-| `/carrinho`         | Carrinho                               |
-| `/login`            | Login (use `admin@presence.com` p/ admin) |
-| `/cadastro`         | Cadastro                               |
-| `/admin`            | Dashboard (protegido — só admin)       |
-| `/admin/produtos`   | CRUD de produtos                       |
-| `/admin/pedidos`    | Lista de pedidos                       |
+| Perfil | Login demo | Painel |
+|--------|------------|--------|
+| ADMIN | `admin@aurevita.com` | `/admin` |
+| SENIOR / DIRECTOR / DISTRIBUTOR | ver API | `/app` |
+| REPRESENTANT | `rep.joao@aurevita.com` | `/app/pedidos` (sem dashboard) |
 
-## Design tokens
+Senha demo: `123@Mudar`
 
-Cores em `tailwind.config.js`:
-- `moss-*` — verde profundo (cor principal)
-- `bone-*` — off-white quente (fundo)
-- `clay-*` — terroso/cobre (acento)
+## Rotas principais
 
-Tipografia:
-- **Fraunces** (display, serif)
-- **Inter** (body, sans)
-- **JetBrains Mono** (códigos, SKUs, datas)
+**Público:** `/` (landing), `/login`, `/cadastro`
 
-## Próximos passos (integração com seu back-end Java)
+**Admin (`/admin/*`):** dashboard, movimentações, produtos, pedidos, clientes, configurações
 
-1. Criar `src/lib/api.js` com `fetch` configurado pra `VITE_API_URL`
-2. Substituir imports de `data/mock.js` por chamadas reais:
-   - `GET /api/products` → catálogo
-   - `GET /api/products/:id` → detalhe
-   - `POST /api/auth/login` → retorna JWT
-   - `GET /api/orders` (admin) → pedidos
-   - `POST /api/orders` → checkout
-3. Trocar `login()` no `lib/store.jsx` por chamada real à API + persistir token em `localStorage`
-4. Adicionar interceptor pra anexar `Authorization: Bearer <token>` nas requisições autenticadas
+**Parceiro (`/app/*`):** dashboard (exceto representante), pedidos, catálogo, carrinho, movimentações, config (sênior)
+
+## Integração com a API
+
+### Admin — clientes
+- `GET /admin/network-summary` — cards de contagem
+- `GET /admin/clients` — lista de parceiros
+- `POST /admin/clients` — cadastro unificado (hierarquia + login)
+
+### Admin — equipe
+- `GET /users` — lista admins (filtro no front)
+- `POST /admin/admins` — novo administrador
+
+### Catálogo
+- `GET /products` — retorna `price`, `priceLevel`, `priceLevelLabel` conforme JWT
+- Checkout: `POST /orders` com `Idempotency-Key`
+
+### Dashboard
+- `GET /dashboard/summary` — KPIs + `recentOrders` + `recentMovements` (escopo por role)
+
+### Movimentações
+- `GET /movements` — escopo automático por perfil no back-end
+
+## Build
+
+```bash
+npm run build
+npm run preview
+```
+
+## Deploy (Vercel)
+
+Front na Vercel; API em servidor separado. Configure `VITE_API_URL` apontando para a URL pública da API.

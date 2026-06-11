@@ -1,5 +1,5 @@
-import { createContext, useContext, useState, useMemo } from 'react'
-import { getSavedUser, loginApi, logoutApi } from './auth'
+import { createContext, useContext, useState, useMemo, useEffect } from 'react'
+import { getSavedUser, loginApi, logoutApi, fetchMe } from './auth'
 import { getToken } from './api'
 import { isAdmin, isAppUser } from './roles'
 
@@ -9,8 +9,23 @@ export function StoreProvider({ children }) {
   const [cart, setCart] = useState([])
   const [user, setUser] = useState(() => getSavedUser())
   const [authLoading, setAuthLoading] = useState(false)
+  const [booting, setBooting] = useState(Boolean(getToken()))
 
   const isAuthenticated = Boolean(user && getToken())
+
+  useEffect(() => {
+    if (!getToken()) {
+      setBooting(false)
+      return
+    }
+    fetchMe()
+      .then(setUser)
+      .catch(() => {
+        logoutApi()
+        setUser(null)
+      })
+      .finally(() => setBooting(false))
+  }, [])
 
   const add = (product, qty = 1) => {
     setCart((c) => {
@@ -57,7 +72,7 @@ export function StoreProvider({ children }) {
   return (
     <StoreCtx.Provider value={{
       cart, add, remove, setQty, clear, total, count,
-      user, login, logout, authLoading, isAuthenticated,
+      user, login, logout, authLoading, booting, isAuthenticated,
       isAdmin: isAdminUser, isAppUser: isAppUserRole,
     }}>
       {children}

@@ -1,11 +1,16 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 import { Minus, Plus, X, ShoppingBag } from 'lucide-react'
 import { useStore } from '../../lib/store'
 import { ProductVisual } from '../../components/ProductVisual'
 import { formatBRL } from '../../lib/format'
+import { createOrder } from '../../lib/orders'
 
 export function Cart({ catalogPath = '/loja' }) {
-  const { cart, setQty, remove, total } = useStore()
+  const { cart, setQty, remove, total, clear } = useStore()
+  const nav = useNavigate()
+  const [checkingOut, setCheckingOut] = useState(false)
+  const [error, setError] = useState('')
 
   if (cart.length === 0) {
     return (
@@ -19,6 +24,20 @@ export function Cart({ catalogPath = '/loja' }) {
   }
 
   const shipping = total >= 199 ? 0 : 24.90
+
+  const checkout = async () => {
+    setCheckingOut(true)
+    setError('')
+    try {
+      await createOrder(cart)
+      clear()
+      nav('/app/pedidos')
+    } catch (e) {
+      setError(e.message)
+    } finally {
+      setCheckingOut(false)
+    }
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-16">
@@ -35,15 +54,15 @@ export function Cart({ catalogPath = '/loja' }) {
                     <h3 className="font-display text-xl text-moss-950">{product.name}</h3>
                     <p className="text-xs text-moss-500 font-mono mt-1">{product.sku}</p>
                   </div>
-                  <button onClick={() => remove(product.id)} className="text-moss-400 hover:text-moss-900">
+                  <button type="button" onClick={() => remove(product.id)} className="text-moss-400 hover:text-moss-900">
                     <X size={18} />
                   </button>
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center border border-moss-300 rounded-full">
-                    <button onClick={() => setQty(product.id, qty - 1)} className="p-2"><Minus size={12} /></button>
+                    <button type="button" onClick={() => setQty(product.id, qty - 1)} className="p-2"><Minus size={12} /></button>
                     <span className="w-8 text-center text-sm">{qty}</span>
-                    <button onClick={() => setQty(product.id, qty + 1)} className="p-2"><Plus size={12} /></button>
+                    <button type="button" onClick={() => setQty(product.id, qty + 1)} className="p-2"><Plus size={12} /></button>
                   </div>
                   <span className="font-display text-lg">{formatBRL(product.price * qty)}</span>
                 </div>
@@ -67,7 +86,15 @@ export function Cart({ catalogPath = '/loja' }) {
           <div className="border-t border-bone-200 mt-6 pt-6 flex justify-between font-display text-2xl">
             <span>Total</span><span>{formatBRL(total + shipping)}</span>
           </div>
-          <button className="btn-primary w-full mt-6">Finalizar compra</button>
+          {error && <p className="text-sm text-clay-600 mt-4">{error}</p>}
+          <button
+            type="button"
+            disabled={checkingOut}
+            onClick={checkout}
+            className="btn-primary w-full mt-6"
+          >
+            {checkingOut ? 'Enviando pedido…' : 'Finalizar compra'}
+          </button>
           <Link to={catalogPath} className="block text-center text-sm text-moss-600 hover:text-moss-900 mt-4">
             continuar comprando
           </Link>

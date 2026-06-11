@@ -1,11 +1,18 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { TrendingUp, ShoppingCart, Clock, Truck, ArrowUpRight } from 'lucide-react'
+import { TrendingUp, ShoppingCart, Clock, Truck, ArrowUpRight, ArrowLeftRight } from 'lucide-react'
 import { fetchDashboardSummary } from '../../lib/dashboard'
 import { formatBRL } from '../../lib/format'
-import { ORDER_STATUS_LABEL, ORDER_STATUS_STYLE, formatOrderDate } from '../../lib/orders'
+import { formatMovementProduct } from '../../lib/movements'
+import { orderStatusLabel, orderStatusClass, formatOrderDate, orderRowId } from '../../lib/orders'
 import { useStore } from '../../lib/store'
-import { getRoleLabel } from '../../lib/roles'
+import { ROLES, getRoleLabel } from '../../lib/roles'
+
+const DASHBOARD_COPY = {
+  [ROLES.SENIOR]: 'Visão consolidada de toda a empresa e filiais.',
+  [ROLES.DIRECTOR]: 'Acompanhe todas as filiais da sua diretoria.',
+  [ROLES.DISTRIBUTOR]: 'Pedidos e movimentação dos representantes da sua filial.',
+}
 
 export function AppDashboard() {
   const { user } = useStore()
@@ -35,7 +42,7 @@ export function AppDashboard() {
           Olá, {user?.name?.split(' ')[0]}.
         </h1>
         <p className="text-moss-600 text-sm mt-2">
-          {getRoleLabel(user?.role)} — visão da sua operação comercial.
+          {getRoleLabel(user?.role)} — {DASHBOARD_COPY[user?.role] || 'Visão da sua operação.'}
         </p>
       </div>
 
@@ -59,34 +66,63 @@ export function AppDashboard() {
             ))}
           </div>
 
-          <div className="card p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="font-display text-xl text-moss-950">Pedidos recentes</h2>
-              <Link to="/app/pedidos" className="text-sm text-moss-700 hover:text-moss-900">
-                ver todos →
-              </Link>
-            </div>
-            {data.recentOrders?.length === 0 ? (
-              <p className="text-sm text-moss-600">Nenhum pedido registrado ainda.</p>
-            ) : (
-              <div className="divide-y divide-bone-200">
-                {data.recentOrders.map((o) => (
-                  <div key={o.orderId} className="flex items-center justify-between py-3 text-sm">
-                    <div>
-                      <span className="font-mono text-moss-700">#{o.orderId}</span>
-                      <span className="text-moss-500 mx-2">·</span>
-                      <span className="text-moss-600">{formatOrderDate(o.createdAt)}</span>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <span className="font-medium">{formatBRL(o.total)}</span>
-                      <span className={`badge ${ORDER_STATUS_STYLE[o.status] || ''}`}>
-                        {ORDER_STATUS_LABEL[o.status] || o.status}
-                      </span>
-                    </div>
-                  </div>
-                ))}
+          <div className="grid lg:grid-cols-2 gap-4">
+            <div className="card p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="font-display text-xl text-moss-950">Pedidos recentes</h2>
+                <Link to="/app/pedidos" className="text-sm text-moss-700 hover:text-moss-900">
+                  ver todos →
+                </Link>
               </div>
-            )}
+              {data.recentOrders?.length === 0 ? (
+                <p className="text-sm text-moss-600">Nenhum pedido registrado ainda.</p>
+              ) : (
+                <div className="divide-y divide-bone-200">
+                  {data.recentOrders.map((o) => (
+                    <div key={orderRowId(o)} className="flex items-center justify-between py-3 text-sm">
+                      <div>
+                        <span className="font-mono text-moss-700">#{orderRowId(o)}</span>
+                        <span className="text-moss-500 mx-2">·</span>
+                        <span className="text-moss-600">{formatOrderDate(o.createdAt)}</span>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <span className="font-medium">{formatBRL(o.total)}</span>
+                        <span className={`badge ${orderStatusClass(o)}`}>
+                          {orderStatusLabel(o)}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="card p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="font-display text-xl text-moss-950 flex items-center gap-2">
+                  <ArrowLeftRight size={18} className="text-moss-600" />
+                  Movimentações recentes
+                </h2>
+                <Link to="/app/movimentacoes" className="text-sm text-moss-700 hover:text-moss-900">
+                  ver todas →
+                </Link>
+              </div>
+              {!data.recentMovements?.length ? (
+                <p className="text-sm text-moss-600">Nenhuma movimentação no seu escopo.</p>
+              ) : (
+                <div className="divide-y divide-bone-200">
+                  {data.recentMovements.map((m) => (
+                    <div key={m.id} className="flex justify-between py-3 text-sm">
+                      <div>
+                        <span className="badge bg-moss-100 text-moss-700 mr-2">{m.type}</span>
+                        <span className="text-moss-600">{formatMovementProduct(m)}</span>
+                      </div>
+                      <span className="text-xs text-moss-500">{formatOrderDate(m.createdAt)}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </>
       )}

@@ -32,6 +32,7 @@ export function isAppUser(role) {
 
 export function getHomeRoute(role) {
   if (isAdmin(role)) return '/admin'
+  if (role === ROLES.REPRESENTANT) return '/app/pedidos'
   if (isAppUser(role)) return '/app'
   return '/'
 }
