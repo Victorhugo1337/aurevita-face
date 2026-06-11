@@ -1,5 +1,10 @@
 import { ROLES } from './roles'
 
+/** CRUD de produtos — contrato API: POST/PUT/DELETE /products (ADMIN) */
+export function canManageProducts(role) {
+  return role === ROLES.ADMIN
+}
+
 /** Rotas /app permitidas por role */
 export const APP_ACCESS = {
   dashboard: [ROLES.SENIOR, ROLES.DIRECTOR, ROLES.DISTRIBUTOR],
