@@ -46,10 +46,6 @@ export function Login() {
             novos produtos pensados para o seu equilíbrio.
           </p>
         </div>
-
-        <div className="text-xs font-mono text-moss-400 relative z-10">
-          presence / login — v1.0
-        </div>
       </div>
 
       <div className="flex items-center justify-center p-8 md:p-16">

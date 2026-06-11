@@ -53,7 +53,6 @@ export function TeamManagementPanel({ seniorMode = false }) {
           {error}
           {seniorMode && (
             <span className="block mt-1 text-moss-600">
-              Se aparecer erro 403, o back-end ainda precisa liberar SENIOR em POST /users.
             </span>
           )}
         </p>
@@ -92,10 +91,6 @@ export function TeamManagementPanel({ seniorMode = false }) {
       {seniorMode && !loading && (
         <div className="px-5 py-3 border-t border-bone-200 bg-bone-50 text-xs text-moss-600 flex items-start gap-2">
           <Mail size={14} className="shrink-0 mt-0.5" />
-          <span>
-            Não há endpoint de convite por e-mail na API. O cadastro cria o usuário com senha
-            temporária — envie as credenciais manualmente ao parceiro após confirmar.
-          </span>
         </div>
       )}
 

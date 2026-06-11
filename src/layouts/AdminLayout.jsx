@@ -22,7 +22,7 @@ export function AdminLayout() {
       <aside className="w-64 bg-moss-950 text-bone-100 flex flex-col">
         <div className="p-6 border-b border-moss-800">
           <div className="font-display text-2xl text-bone-50 leading-none">Aurevita</div>
-          <div className="text-[10px] font-mono uppercase tracking-widest text-moss-400 mt-1">admin panel</div>
+          <div className="text-[10px] font-mono uppercase tracking-widest text-moss-400 mt-1">admin painel</div>
         </div>
 
         <nav className="flex-1 p-3 space-y-1">
@@ -54,7 +54,7 @@ export function AdminLayout() {
             </div>
             <div className="text-xs">
               <div className="text-bone-50 font-medium">{user?.name || 'Admin'}</div>
-              <div className="text-moss-400 truncate max-w-[140px]">{user?.email || 'admin@presence'}</div>
+              <div className="text-moss-400 truncate max-w-[140px]">{user?.email || 'admin@aurevita.com'}</div>
             </div>
           </div>
           <button
