@@ -1,6 +1,6 @@
-# Aurevita Front
+# Aurevita front-end — protótipo
 
-Front-end B2B da plataforma **Aurevita/Presence**. Stack: **React + Vite + Tailwind CSS + React Router**.
+Front-end B2B da plataforma **Aurevita*. Stack: **React + Vite + Tailwind CSS + React Router**.
 
 Integrado com a API Spring Boot (`api-aurevita`).
 
