@@ -31,7 +31,7 @@ export function Register() {
             e acompanhar seus pedidos.
           </p>
         </div>
-        <div className="text-xs font-mono text-moss-400 relative z-10">presence / signup</div>
+        <div className="text-xs font-mono text-moss-400 relative z-10">aurevita / signup</div>
       </div>
 
       <div className="flex items-center justify-center p-8 md:p-16">
