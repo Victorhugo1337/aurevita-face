@@ -195,9 +195,6 @@ function PlatformSettings({ title, subtitle, adminMode, showTeam, seniorMode }) 
           <div className="card overflow-hidden">
             <div className="px-5 py-4 border-b border-bone-200 bg-bone-100">
               <h2 className="font-display text-lg text-moss-950">Filiais</h2>
-              {adminMode && (
-                <p className="text-xs text-moss-600 mt-1">CRUD completo via API — POST /branches (admin)</p>
-              )}
             </div>
             <div className="table-wrap">
             <table className="w-full text-sm">

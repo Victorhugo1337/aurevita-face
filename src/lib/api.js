@@ -63,3 +63,37 @@ export async function request(path, { method = 'GET', body, headers = {}, auth =
 
   return json.data
 }
+
+export async function uploadFile(path, file, { auth = true } = {}) {
+  const h = {}
+  if (auth) {
+    const token = getToken()
+    if (token) h.Authorization = `Bearer ${token}`
+  }
+
+  const res = await fetch(`${BASE}${path}`, {
+    method: 'POST',
+    headers: h,
+    body: (() => {
+      const form = new FormData()
+      form.append('file', file)
+      return form
+    })(),
+  })
+
+  if (res.status === 204) return null
+
+  let json
+  try {
+    json = await res.json()
+  } catch {
+    throw new ApiError('Resposta inválida da API', res.status)
+  }
+
+  if (!json.success) {
+    const msg = json.message || json.errors?.join(', ') || 'Erro na requisição'
+    throw new ApiError(msg, res.status, json)
+  }
+
+  return json.data
+}

@@ -3,15 +3,18 @@ import { Plus, Search, Edit2, Trash2 } from 'lucide-react'
 import {
   fetchProducts,
   fetchCategories,
-  createProduct,
-  updateProduct,
   deleteProduct,
+  saveProduct,
 } from '../../lib/products'
+import { canManageProducts } from '../../lib/permissions'
+import { useStore } from '../../lib/store'
 import { formatBRL } from '../../lib/format'
 import { ProductVisual } from '../../components/ProductVisual'
 import { ProductFormModal } from '../../components/ProductFormModal'
 
 export function AdminProducts() {
+  const { user } = useStore()
+  const canManage = canManageProducts(user?.role)
   const [products, setProducts] = useState([])
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
@@ -42,9 +45,14 @@ export function AdminProducts() {
 
   const catName = (slug) => categories.find((c) => c.slug === slug)?.name || slug
 
-  const handleSave = async (form) => {
-    if (modal?.id) await updateProduct(modal.id, form)
-    else await createProduct(form)
+  const handleSave = async ({ form, price, priceType, imageFile }) => {
+    await saveProduct({
+      id: modal?.id,
+      form,
+      price,
+      priceType,
+      imageFile,
+    })
     load()
   }
 
@@ -65,9 +73,11 @@ export function AdminProducts() {
           <p className="text-xs uppercase tracking-[0.3em] text-moss-600 mb-2">Catálogo</p>
           <h1 className="page-title">Produtos</h1>
         </div>
-        <button type="button" onClick={() => setModal({})} className="btn-primary w-full sm:w-auto shrink-0">
-          <Plus size={16} /> Novo produto
-        </button>
+        {canManage && (
+          <button type="button" onClick={() => setModal({})} className="btn-primary w-full sm:w-auto shrink-0">
+            <Plus size={16} /> Novo produto
+          </button>
+        )}
       </div>
 
       {loading && <p className="text-moss-600 text-sm mb-6">Carregando produtos…</p>}
@@ -119,22 +129,24 @@ export function AdminProducts() {
                   </span>
                 </td>
                 <td className="py-3 px-5">
-                  <div className="flex gap-1 justify-end">
-                    <button
-                      type="button"
-                      onClick={() => setModal(p)}
-                      className="p-2 text-moss-600 hover:text-moss-900 hover:bg-bone-100 rounded"
-                    >
-                      <Edit2 size={14} />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(p.id)}
-                      className="p-2 text-moss-600 hover:text-clay-600 hover:bg-bone-100 rounded"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
+                  {canManage && (
+                    <div className="flex gap-1 justify-end">
+                      <button
+                        type="button"
+                        onClick={() => setModal(p)}
+                        className="p-2 text-moss-600 hover:text-moss-900 hover:bg-bone-100 rounded"
+                      >
+                        <Edit2 size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(p.id)}
+                        className="p-2 text-moss-600 hover:text-clay-600 hover:bg-bone-100 rounded"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  )}
                 </td>
               </tr>
             ))}
